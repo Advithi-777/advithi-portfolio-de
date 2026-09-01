@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A R Advithi — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0D13;
+    --bg-panel:#121620;
+    --bg-panel-alt:#161B27;
+    --border:#232A3B;
+    --text:#E7EAF3;
+    --text-dim:#8891A6;
+    --text-faint:#525C72;
+    --lime:#8CFF6B;
+    --lime-dim:rgba(140,255,107,0.12);
+    --cyan:#3FD6FF;
+    --cyan-dim:rgba(63,214,255,0.12);
+    --amber:#FFB020;
+    --amber-dim:rgba(255,176,32,0.12);
+    --violet:#B18CFF;
+    --radius:12px;
+    --font-display:'Sora', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --font-body:'IBM Plex Sans', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(63,214,255,0.06), transparent 45%),
+      radial-gradient(circle at 90% 20%, rgba(140,255,107,0.05), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--cyan); color:#00131A; }
+
+  /* ---------- LAYOUT: SIDEBAR + MAIN ---------- */
+  .shell{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:230px; flex-shrink:0;
+    background:var(--bg-panel);
+    border-right:1px solid var(--border);
+    position:sticky; top:0; height:100vh;
+    display:flex; flex-direction:column;
+    padding:24px 20px;
+  }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:17px; letter-spacing:-0.01em; }
+  .brand span{ color:var(--cyan); }
+  .sidebar nav{ display:flex; flex-direction:column; gap:3px; margin-top:36px; flex:1; }
+  .sidebar nav a{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim);
+    padding:9px 10px; border-radius:8px; transition:all .15s ease;
+    display:flex; align-items:center; gap:9px;
+  }
+  .sidebar nav a:hover{ color:var(--text); background:var(--bg-panel-alt); }
+  .sidebar nav a .diamond{ color:var(--text-faint); font-size:10px; }
+  .sidebar nav a:hover .diamond{ color:var(--lime); }
+
+  .sidebar-status{
+    border-top:1px solid var(--border); padding-top:16px; margin-top:16px;
+    font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim);
+  }
+  .sidebar-status .row{ display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+  .pulse-dot{
+    width:7px; height:7px; border-radius:50%; background:var(--lime); flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(140,255,107,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(140,255,107,0.5); }
+    70%{ box-shadow:0 0 0 6px rgba(140,255,107,0); }
+    100%{ box-shadow:0 0 0 0 rgba(140,255,107,0); }
+  }
+  .sidebar-sub{ color:var(--text-faint); padding-left:14px; }
+
+  .main{ flex:1; min-width:0; padding:36px 40px 60px; max-width:1080px; }
+
+  @media (max-width:880px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:relative; flex-direction:row; align-items:center; padding:14px 18px; gap:18px; }
+    .sidebar nav{ flex-direction:row; margin-top:0; overflow-x:auto; gap:2px; }
+    .sidebar-status{ display:none; }
+    .main{ padding:28px 18px 50px; }
+  }
+
+  /* ---------- PANEL PRIMITIVE ---------- */
+  .panel{
+    background:var(--bg-panel); border:1px solid var(--border);
+    border-radius:var(--radius);
+  }
+  .panel-label{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.08em;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero-eyebrow{
+    font-family:var(--font-mono); font-size:12px; color:var(--cyan);
+    display:flex; align-items:center; gap:8px; margin-bottom:16px;
+  }
+  .hero-title{
+    font-family:var(--font-display); font-weight:800; font-size:clamp(34px,5vw,50px);
+    letter-spacing:-0.02em; line-height:1.05;
+  }
+  .hero-role{ font-family:var(--font-mono); color:var(--lime); font-size:14px; margin-top:10px; }
+  .hero-summary{ max-width:600px; color:var(--text-dim); font-size:15.5px; margin-top:16px; }
+
+  .contact-row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+  .chip{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:var(--font-mono); font-size:12px;
+    padding:7px 12px; border-radius:999px;
+    background:var(--bg-panel-alt); border:1px solid var(--border);
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .chip:hover{ border-color:var(--cyan); transform:translateY(-1px); }
+
+  /* ---------- DAG FLOW DIAGRAM ---------- */
+  .dag-panel{ margin-top:30px; padding:24px; }
+  .dag-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
+  .dag-run-btn{
+    font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim);
+    background:transparent; border:1px solid var(--border);
+    padding:6px 12px; border-radius:7px; cursor:pointer; transition:all .15s ease;
+  }
+  .dag-run-btn:hover{ color:var(--lime); border-color:var(--lime); }
+
+  .dag-track{
+    position:relative; height:64px; margin:0 10px;
+  }
+  .dag-line{
+    position:absolute; top:50%; left:0; right:0; height:2px;
+    background:var(--border); transform:translateY(-50%);
+  }
+  .dag-node{
+    position:absolute; top:50%; transform:translate(-50%,-50%);
+    width:14px; height:14px; border-radius:50%;
+    background:var(--bg-panel); border:2px solid var(--cyan);
+    z-index:2;
+  }
+  .dag-node-label{
+    position:absolute; top:calc(50% + 16px); transform:translateX(-50%);
+    font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .packet{
+    position:absolute; top:50%; width:7px; height:7px; border-radius:50%;
+    background:var(--lime); transform:translate(-50%,-50%);
+    box-shadow:0 0 8px 1px rgba(140,255,107,0.6);
+    animation:flow 3.2s linear infinite;
+    left:0%;
+  }
+  .packet.p2{ animation-delay:-0.8s; background:var(--cyan); box-shadow:0 0 8px 1px rgba(63,214,255,0.6); }
+  .packet.p3{ animation-delay:-1.6s; }
+  .packet.p4{ animation-delay:-2.4s; background:var(--cyan); box-shadow:0 0 8px 1px rgba(63,214,255,0.6); }
+  @keyframes flow{ from{ left:0%; } to{ left:100%; } }
+  .packet.burst{ animation:flow 1.8s cubic-bezier(.3,.6,.4,1) 1; background:var(--amber); box-shadow:0 0 10px 2px rgba(255,176,32,0.7); width:9px; height:9px; }
+
+  @media (max-width:640px){ .dag-node-label{ font-size:9px; } }
+
+  /* ---------- KPI GRID ---------- */
+  .kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:16px; }
+  @media (max-width:760px){ .kpi-grid{ grid-template-columns:repeat(2,1fr); } }
+  .kpi-panel{ padding:16px 16px 12px; }
+  .kpi-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .kpi-num{ font-family:var(--font-mono); font-weight:600; font-size:24px; color:var(--text); margin-top:8px; }
+  .kpi-label{ font-size:11.5px; color:var(--text-dim); margin-top:4px; }
+  .kpi-delta{ font-family:var(--font-mono); font-size:10.5px; padding:3px 7px; border-radius:5px; background:var(--lime-dim); color:var(--lime); }
+
+  /* ---------- SECTIONS ---------- */
+  section{ margin-top:64px; }
+  .section-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:22px; }
+  .section-num{ font-family:var(--font-mono); font-size:12px; color:var(--text-faint); }
+  .section-title{ font-family:var(--font-display); font-weight:700; font-size:24px; letter-spacing:-0.01em; }
+
+  /* ---------- SERVICES (stack) ---------- */
+  .status-panel{ padding:6px 0; }
+  .status-row{
+    display:flex; align-items:flex-start; gap:14px; padding:16px 22px;
+    border-bottom:1px solid var(--border);
+  }
+  .status-row:last-child{ border-bottom:none; }
+  .status-dot-wrap{ padding-top:5px; }
+  .status-name{ font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--text); }
+  .status-state{ font-family:var(--font-mono); font-size:10.5px; color:var(--lime); margin-left:10px; }
+  .status-tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
+  .status-tag{ font-family:var(--font-mono); font-size:11px; padding:4px 9px; border-radius:6px; background:var(--bg-panel-alt); color:var(--text-dim); border:1px solid var(--border); }
+
+  /* ---------- TIMELINE (experience) ---------- */
+  .timeline-panel{ padding:26px 26px 26px 30px; }
+  .timeline-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .timeline-role{ font-family:var(--font-display); font-weight:700; font-size:18px; }
+  .timeline-org{ font-family:var(--font-mono); color:var(--cyan); font-size:12.5px; margin-top:4px; }
+  .timeline-time{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); background:var(--bg-panel-alt); padding:5px 10px; border-radius:7px; }
+
+  .timeline{ position:relative; padding-left:22px; }
+  .timeline::before{ content:''; position:absolute; left:4px; top:6px; bottom:6px; width:1.5px; background:var(--border); }
+  .timeline-item{ position:relative; padding-bottom:18px; font-size:14px; color:var(--text-dim); }
+  .timeline-item:last-child{ padding-bottom:0; }
+  .timeline-item::before{
+    content:''; position:absolute; left:-22px; top:4px; width:9px; height:9px; border-radius:50%;
+    background:var(--lime); border:3px solid var(--bg-panel);
+  }
+  .timeline-item b{ color:var(--text); font-weight:600; }
+
+  /* ---------- PIPELINES (projects) ---------- */
+  .pipeline-panel{ margin-bottom:20px; overflow:hidden; }
+  .pipeline-head{ display:flex; justify-content:space-between; align-items:center; padding:18px 22px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:10px; }
+  .pipeline-name{ font-family:var(--font-display); font-weight:700; font-size:17px; }
+  .pipeline-stack{ font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
+  .pipeline-body{ padding:22px; }
+  .pipeline-body ul{ list-style:none; }
+  .pipeline-body li{ position:relative; padding-left:18px; margin-bottom:11px; font-size:14px; color:var(--text-dim); }
+  .pipeline-body li::before{ content:"›"; position:absolute; left:0; color:var(--lime); font-family:var(--font-mono); font-weight:700; }
+  .pipeline-stat{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); margin-top:14px; }
+  .pipeline-stat b{ color:var(--text); }
+
+  .mini-dag{ position:relative; height:44px; margin:18px 4px 8px; }
+  .mini-dag .dag-line{ background:var(--border); }
+  .mini-dag .dag-node{ width:10px; height:10px; }
+  .mini-dag .dag-node-label{ top:calc(50% + 13px); font-size:9.5px; }
+
+  .view-pills{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .view-pill{ font-family:var(--font-mono); font-size:11px; padding:6px 10px; background:var(--bg-panel-alt); border:1px solid var(--border); border-radius:7px; color:var(--text-dim); }
+
+  /* ---------- EDUCATION ---------- */
+  .edu-panel{ padding:22px 24px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .edu-degree{ font-family:var(--font-display); font-weight:700; font-size:16.5px; }
+  .edu-school{ color:var(--text-dim); font-size:13.5px; margin-top:4px; }
+  .edu-cgpa{ font-family:var(--font-mono); font-size:12.5px; color:var(--cyan); margin-top:8px; }
+  .pub{ margin-top:14px; padding-top:14px; border-top:1px dashed var(--border); font-size:12.5px; color:var(--text-dim); }
+  .pub b{ color:var(--text); }
+
+  /* ---------- FOOTER / CONTACT ---------- */
+  footer{ margin-top:20px; }
+  .terminal-footer{ padding:26px 26px 22px; }
+  .tf-line{ font-family:var(--font-mono); font-size:13px; color:var(--text-dim); margin-bottom:6px; }
+  .tf-line .prompt{ color:var(--lime); }
+  .tf-line .cmd{ color:var(--text); }
+  .footer-chips{ display:flex; flex-wrap:wrap; gap:9px; margin:18px 0 8px; }
+  .footer-end{ margin-top:22px; padding-top:16px; border-top:1px solid var(--border); font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+  .reveal{ opacity:0; transform:translateY(12px); transition:opacity .55s ease, transform .55s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .packet{ animation:none; left:20%; }
+    .pulse-dot{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">advithi<span>.de</span></div>
+    <nav>
+      <a href="#overview"><span class="diamond">◆</span>Overview</a>
+      <a href="#services"><span class="diamond">◆</span>Services</a>
+      <a href="#timeline"><span class="diamond">◆</span>Timeline</a>
+      <a href="#pipelines"><span class="diamond">◆</span>Pipelines</a>
+      <a href="#education"><span class="diamond">◆</span>Education</a>
+      <a href="#contact"><span class="diamond">◆</span>Contact</a>
+    </nav>
+    <div class="sidebar-status">
+      <div class="row"><span class="pulse-dot"></span> SYSTEM OPERATIONAL</div>
+      <div class="sidebar-sub">uptime 2y · region IN-BLR</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section id="overview">
+      <div class="hero-eyebrow"><span class="pulse-dot"></span> pipeline_graph.dag — live view</div>
+      <h1 class="hero-title">A R Advithi</h1>
+      <div class="hero-role">Data Engineer — Pipelines, ETL &amp; Cloud Data Platforms</div>
+      <p class="hero-summary">Two years building and hardening ETL pipelines for production workloads — moving millions of records a day through Azure Data Factory and Databricks, cutting retries, shrinking compute cost, and making failures traceable instead of mysterious.</p>
+
+      <div class="contact-row">
+        <a class="chip" href="tel:7338082417">📞 7338082417</a>
+        <a class="chip" href="mailto:advithiar@gmail.com">✉ advithiar@gmail.com</a>
+        <a class="chip" href="https://www.linkedin.com/in/advithiar" target="_blank" rel="noopener">🔗 LinkedIn</a>
+        <a class="chip" href="https://github.com/Advithi-777" target="_blank" rel="noopener">💻 GitHub</a>
+      </div>
+
+      <div class="panel dag-panel reveal">
+        <div class="dag-head">
+          <span class="panel-label">career_pipeline — 5 nodes, 4 edges</span>
+          <button class="dag-run-btn" id="dagRunBtn">▶ trigger run</button>
+        </div>
+        <div class="dag-track" id="dagTrack">
+          <div class="dag-line"></div>
+          <div class="dag-node" style="left:2%"></div><div class="dag-node-label" style="left:2%">SOURCE</div>
+          <div class="dag-node" style="left:26%"></div><div class="dag-node-label" style="left:26%">INGEST</div>
+          <div class="dag-node" style="left:50%"></div><div class="dag-node-label" style="left:50%">VALIDATE</div>
+          <div class="dag-node" style="left:74%"></div><div class="dag-node-label" style="left:74%">TRANSFORM</div>
+          <div class="dag-node" style="left:98%"></div><div class="dag-node-label" style="left:98%">SERVE</div>
+          <div class="packet p1"></div>
+          <div class="packet p2"></div>
+          <div class="packet p3"></div>
+          <div class="packet p4"></div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="panel kpi-panel reveal">
+          <div class="kpi-top"><span class="panel-label">experience</span><span class="kpi-delta">active</span></div>
+          <div class="kpi-num" data-count="2" data-suffix="+ yrs">0</div>
+          <div class="kpi-label">In production data engineering</div>
+        </div>
+        <div class="panel kpi-panel reveal">
+          <div class="kpi-top"><span class="panel-label">throughput</span><span class="kpi-delta">daily</span></div>
+          <div class="kpi-num" data-count="5" data-suffix="M+">0</div>
+          <div class="kpi-label">Records processed per day</div>
+        </div>
+        <div class="panel kpi-panel reveal">
+          <div class="kpi-top"><span class="panel-label">retries</span><span class="kpi-delta">▼ improved</span></div>
+          <div class="kpi-num" data-count="35" data-suffix="%">0</div>
+          <div class="kpi-label">Pipeline retry rate reduced</div>
+        </div>
+        <div class="panel kpi-panel reveal">
+          <div class="kpi-top"><span class="panel-label">ops effort</span><span class="kpi-delta">▼ improved</span></div>
+          <div class="kpi-num" data-count="40" data-suffix="%">0</div>
+          <div class="kpi-label">Manual operations reduced</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="section-head reveal"><span class="section-num">01</span><span class="section-title">Services</span></div>
+      <div class="panel status-panel reveal">
+        <div class="status-row">
+          <div class="status-dot-wrap"><span class="pulse-dot"></span></div>
+          <div>
+            <span class="status-name">languages</span><span class="status-state">● operational</span>
+            <div class="status-tags"><span class="status-tag">SQL</span><span class="status-tag">PL/SQL</span><span class="status-tag">Python</span></div>
+          </div>
+        </div>
+        <div class="status-row">
+          <div class="status-dot-wrap"><span class="pulse-dot"></span></div>
+          <div>
+            <span class="status-name">data_stack</span><span class="status-state">● operational</span>
+            <div class="status-tags"><span class="status-tag">PySpark</span><span class="status-tag">dbt Core</span><span class="status-tag">Databricks</span><span class="status-tag">Snowflake</span><span class="status-tag">Apache Airflow</span><span class="status-tag">Power BI</span></div>
+          </div>
+        </div>
+        <div class="status-row">
+          <div class="status-dot-wrap"><span class="pulse-dot"></span></div>
+          <div>
+            <span class="status-name">data_modeling</span><span class="status-state">● operational</span>
+            <div class="status-tags"><span class="status-tag">Medallion Architecture</span><span class="status-tag">Star Schema</span><span class="status-tag">SCD Types</span><span class="status-tag">Fact &amp; Dimension Modeling</span></div>
+          </div>
+        </div>
+        <div class="status-row">
+          <div class="status-dot-wrap"><span class="pulse-dot"></span></div>
+          <div>
+            <span class="status-name">cloud_and_storage</span><span class="status-state">● operational</span>
+            <div class="status-tags"><span class="status-tag">Azure Data Factory</span><span class="status-tag">Azure Blob Storage</span><span class="status-tag">ADLS Gen2</span></div>
+          </div>
+        </div>
+        <div class="status-row">
+          <div class="status-dot-wrap"><span class="pulse-dot"></span></div>
+          <div>
+            <span class="status-name">tools_and_platforms</span><span class="status-state">● operational</span>
+            <div class="status-tags"><span class="status-tag">GitHub</span><span class="status-tag">GitHub Actions</span><span class="status-tag">Jira</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <div class="section-head reveal"><span class="section-num">02</span><span class="section-title">Timeline</span></div>
+      <div class="panel timeline-panel reveal">
+        <div class="timeline-top">
+          <div>
+            <div class="timeline-role">Associate Software Engineer — Data Engineer</div>
+            <div class="timeline-org">Accenture · Bengaluru, IND</div>
+          </div>
+          <div class="timeline-time">2024 — Present</div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item"><b>Built parameterised ADF pipelines</b> processing 5M+ daily records from legacy systems into ADLS Gen2, cutting pipeline retry rates by 35%.</div>
+          <div class="timeline-item"><b>Implemented PySpark transformations</b> on Azure Databricks with medallion architecture, using broadcast joins and custom partitioning to avoid data skew.</div>
+          <div class="timeline-item"><b>Refactored legacy joins</b> into optimized CTEs and partitioned SQL, cutting query execution time and compute usage by 30%.</div>
+          <div class="timeline-item"><b>Built metadata-driven pipeline architectures</b> on dynamic JSON/XML templates, enabling multi-environment deployment with zero hardcoding.</div>
+          <div class="timeline-item"><b>Designed schema-drift handling</b> and data-quality assertions with structured error logging for failure traceability.</div>
+          <div class="timeline-item"><b>Automated secure SFTP + GPG workflows</b> in Python, cutting manual operational effort by 40%.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipelines">
+      <div class="section-head reveal"><span class="section-num">03</span><span class="section-title">Pipelines shipped</span></div>
+
+      <div class="panel pipeline-panel reveal">
+        <div class="pipeline-head">
+          <span class="pipeline-name">Telecom Customer Analytics Pipeline</span>
+          <span class="pipeline-stack">Azure · Snowflake · dbt · PySpark · Airflow</span>
+        </div>
+        <div class="pipeline-body">
+          <ul>
+            <li>Built a parameterised ADF pipeline loading 120K+ telecom records from Blob Storage into Snowflake, following medallion architecture.</li>
+            <li>Wrote PySpark scripts for cleansing, deduplication, and feature engineering.</li>
+            <li>Built dbt incremental data marts for churn risk scoring and tower performance reporting.</li>
+            <li>Ran 14 automated data-quality checks via Airflow DAG with email alerting, wired to CI/CD through GitHub Actions.</li>
+          </ul>
+          <div class="pipeline-stat"><b>120K+</b> records · <b>14</b> DQ checks · CI/CD on every push</div>
+          <div class="mini-dag" data-mini>
+            <div class="dag-line"></div>
+            <div class="dag-node" style="left:2%"></div><div class="dag-node-label" style="left:2%">BLOB</div>
+            <div class="dag-node" style="left:26%"></div><div class="dag-node-label" style="left:26%">BRONZE</div>
+            <div class="dag-node" style="left:50%"></div><div class="dag-node-label" style="left:50%">SILVER</div>
+            <div class="dag-node" style="left:74%"></div><div class="dag-node-label" style="left:74%">GOLD</div>
+            <div class="dag-node" style="left:98%"></div><div class="dag-node-label" style="left:98%">MART</div>
+            <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel pipeline-panel reveal">
+        <div class="pipeline-head">
+          <span class="pipeline-name">UPI Transaction Insights Pipeline</span>
+          <span class="pipeline-stack">ELT · PySpark · Snowflake · Airflow · Streamlit</span>
+        </div>
+        <div class="pipeline-body">
+          <ul>
+            <li>Designed an end-to-end ELT pipeline on medallion architecture — schema validation, deduplication, and enrichment over simulated UPI transaction data.</li>
+            <li>Orchestrated workflows with Airflow and shipped CI/CD via GitHub Actions.</li>
+            <li>Delivered a Streamlit dashboard connected to Snowflake for live business insights.</li>
+          </ul>
+          <div class="pipeline-stat"><b>4</b> Gold-layer views · Airflow + GitHub Actions · Streamlit dashboard</div>
+          <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-top:16px;">Gold layer views</div>
+          <div class="view-pills">
+            <span class="view-pill">Hourly trends</span>
+            <span class="view-pill">Bank failures</span>
+            <span class="view-pill">Merchant spend</span>
+            <span class="view-pill">Anomaly detection</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education">
+      <div class="section-head reveal"><span class="section-num">04</span><span class="section-title">Education</span></div>
+      <div class="panel edu-panel reveal">
+        <div>
+          <div class="edu-degree">Bachelor of Engineering, Computer Science</div>
+          <div class="edu-school">Kalpataru Institute of Technology · Tiptur, IND</div>
+          <div class="edu-cgpa">CGPA 8.45</div>
+          <div class="pub">Published: <b>"Machine Learning–Based Crop Management System"</b> — IEEE Xplore, 2024</div>
+        </div>
+        <div class="timeline-time">2020 — 2024</div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <div class="section-head reveal" style="margin-top:64px;"><span class="section-num">05</span><span class="section-title">Contact</span></div>
+      <div class="panel terminal-footer reveal">
+        <div class="tf-line"><span class="prompt">advithi@career:~$</span> <span class="cmd">contact --all</span></div>
+        <div class="tf-line" style="color:var(--text-faint)">// resolving channels...</div>
+        <div class="footer-chips">
+          <a class="chip" href="tel:7338082417">📞 7338082417</a>
+          <a class="chip" href="mailto:advithiar@gmail.com">✉ advithiar@gmail.com</a>
+          <a class="chip" href="https://www.linkedin.com/in/advithiar" target="_blank" rel="noopener">🔗 LinkedIn</a>
+          <a class="chip" href="https://github.com/Advithi-777" target="_blank" rel="noopener">💻 GitHub</a>
+        </div>
+        <div class="footer-end">
+          <span>A R Advithi — Data Engineer</span>
+          <span>status: accepting new DAGs</span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- reveal on scroll ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(el=>io.observe(el));
+
+  // ---- KPI count-up ----
+  const kpiEls = document.querySelectorAll('.kpi-num');
+  const kpiIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ animateCount(e.target); kpiIo.unobserve(e.target); }
+    });
+  }, {threshold:0.4});
+  kpiEls.forEach(el=>kpiIo.observe(el));
+
+  function animateCount(el){
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    if(reduceMotion){ el.textContent = target + suffix; return; }
+    const duration = 900;
+    const start = performance.now();
+    function frame(now){
+      const p = Math.min((now-start)/duration, 1);
+      const eased = 1 - Math.pow(1-p, 3);
+      const val = Math.round(target * eased);
+      el.textContent = val + suffix;
+      if(p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- DAG "trigger run" burst packet ----
+  document.getElementById('dagRunBtn').addEventListener('click', ()=>{
+    const track = document.getElementById('dagTrack');
+    const burst = document.createElement('div');
+    burst.className = 'packet burst';
+    track.appendChild(burst);
+    setTimeout(()=> burst.remove(), reduceMotion ? 0 : 1900);
+  });
+</script>
+
+</body>
+</html>
